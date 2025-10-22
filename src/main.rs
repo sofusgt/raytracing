@@ -9,11 +9,11 @@ fn main() {
         let g = y as f32 / (image_height as f32 - 1.0);
         let b = 0.0;
 
-        let r = (255.999 * r) as u8;
-        let g = (255.999 * g) as u8;
-        let b = (255.999 * b) as u8;
+        let ir = (255.0 * g) as u8;
+        let ig = (255.0 * r) as u8;
+        let ib = (255.0 * b) as u8;
 
-        *pixel = image::Rgb([r, g, b]);
+        *pixel = image::Rgb([ir, ig, ib]);
     }
 
     image.save("image.png").unwrap();
