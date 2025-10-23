@@ -1,22 +1,35 @@
+use raytracing::vec3::Vec3;
+
 fn main() {
     // Image
-    let image_width = 256;
-    let image_height = 256;
+    let image_width: u32 = 256;
+    let image_height: u32 = 256;
 
+    // Initalize progress bar
+    let progress_bar = indicatif::ProgressBar::new(image_width as u64 * image_height as u64);
+
+    // Create image buffer and iterate pixels
     let mut image = image::ImageBuffer::new(image_width, image_height);
     for (x, y, pixel) in image.enumerate_pixels_mut() {
-        eprint!("\rScanlines remaining: {} ", image_height - y - 1);
-        let r = x as f32 / (image_width as f32 - 1.0);
-        let g = y as f32 / (image_height as f32 - 1.0);
-        let b = 0.0;
+        // Generate color
+        let color = Vec3::new(
+            x as f32 / ((image_width - 1) as f32),
+            y as f32 / ((image_height - 1) as f32),
+            0.0,
+        );
 
-        let r = (255.0 * r) as u8;
-        let g = (255.0 * g) as u8;
-        let b = (255.0 * b) as u8;
+        // Assign pixel value
+        *pixel = image::Rgb(color.raw());
 
-        *pixel = image::Rgb([r, g, b]);
+        // Increment progress bar when we are done generating pixel
+        progress_bar.inc(1);
     }
-    eprintln!("\nDone.                        ");
+    progress_bar.finish();
 
+    // Convert image from f32 to u8
+    let image = image::DynamicImage::ImageRgb32F(image);
+    let image = image.to_rgb8();
+
+    // Save image as png
     image.save("image.png").unwrap();
 }
