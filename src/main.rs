@@ -27,8 +27,7 @@ fn main() {
     progress_bar.finish();
 
     // Convert image from f32 to u8
-    let image = image::DynamicImage::ImageRgb32F(image);
-    let image = image.to_rgb8();
+    let image = image::DynamicImage::ImageRgb32F(image).into_rgb8();
 
     // Save image as png
     image.save("image.png").unwrap();
